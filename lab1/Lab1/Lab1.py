@@ -7,15 +7,18 @@ def is_first_power_of_second(a,b):
     is_power = False;
     if (a % b == 0 and ((a/b) % b) == 0) :
         is_power = True;
-    # b raised to 0 equals a
-    # b raised to 1 equals a
     elif (b**0 == a or b**1 == a) :
+        # default cases:
+            # b raised to 0 equals a
+            # b raised to 1 equals a
         is_power = True;
+    # log result
     print('Is ' + str(a) + ' power of ' + str(b) + ': ' + str(is_power));
     return is_power;
 
 # Setup Tests
 def test_power_function():
+    # dictionary for a & b values
     testData = [
         {
             "a": 5,
