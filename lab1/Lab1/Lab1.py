@@ -6,13 +6,11 @@ def is_first_power_of_second(a, b):
     # default cases (only one must be true):
         # b raised to 0 equals a
         # b raised to 1 equals a
-    is_power = False;
     if (a % b == 0 and ((a/b) % b) == 0) :
-        is_power = True;
+        return True;
     elif (b**0 == a or b**1 == a) :
-        is_power = True;
-    print('Is ' + str(a) + ' power of ' + str(b) + ': ' + str(is_power));
-    return is_power;
+        return True;
+    return False;
 
 # Setup Tests
 def test_power_function():
@@ -49,7 +47,10 @@ def test_power_function():
     ];
     # Call test foreach set
     for dataPair in testData:
-        is_first_power_of_second(dataPair["a"],dataPair["b"]);
+        a = dataPair["a"];
+        b = dataPair["b"];
+        is_power = is_first_power_of_second(a,b);
+        print('Is ' + str(a) + ' power of ' + str(b) + ': ' + str(is_power));
 
 
 # Run Test
