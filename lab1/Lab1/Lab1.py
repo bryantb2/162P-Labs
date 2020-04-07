@@ -1,18 +1,16 @@
-"""
-    Check default cases
-        then    
-    Check standard cases
-"""
-def is_first_power_of_second(a,b):
+# Check if A is Power of B
+def is_first_power_of_second(a, b):
+    # standard cases (both must be true):
+        # a modulus b, check if 0
+        # divide a/b and then modulus, check if 0
+    # default cases (only one must be true):
+        # b raised to 0 equals a
+        # b raised to 1 equals a
     is_power = False;
     if (a % b == 0 and ((a/b) % b) == 0) :
         is_power = True;
     elif (b**0 == a or b**1 == a) :
-        # default cases:
-            # b raised to 0 equals a
-            # b raised to 1 equals a
         is_power = True;
-    # log result
     print('Is ' + str(a) + ' power of ' + str(b) + ': ' + str(is_power));
     return is_power;
 
@@ -49,6 +47,7 @@ def test_power_function():
             "b": 2
         }
     ];
+    # Call test foreach set
     for dataPair in testData:
         is_first_power_of_second(dataPair["a"],dataPair["b"]);
 
