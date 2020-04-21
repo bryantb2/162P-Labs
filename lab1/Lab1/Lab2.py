@@ -40,14 +40,14 @@ def translate_move_to_indexes(user_move_number):
     # converts 1D array index into 2D indexes
     index_vals = { "row": 0, "column": 0 };
     # use tunrary operator to find row index (then subtract 1 because the index is behind the square number)
-    row_val = (3 if user_move_number % 3 == 0 else user_move_number % 3) -1;
-    col_val = 0;
+    col_val = (3 if user_move_number % 3 == 0 else user_move_number % 3) -1;
+    row_val = 0;
     if(user_move_number <= 3):
-        col_val = 0;
+        row_val = 0;
     elif(user_move_number <= 6):
-        col_val = 1;
+        row_val = 1;
     else:
-        col_val = 2;
+        row_val = 2;
     index_vals["row"] = row_val;
     index_vals["column"] = col_val;
     return index_vals;
@@ -126,32 +126,34 @@ def check_diagonals(board, player_marker):
 
 # handlers
 def handle_game(game_board, square_number, current_player):
-    # print current game state
-    show_board(game_board);
     # validate inputted number
     if(move_in_range(square_number)):
         # check if square is available
         if(is_square_open(game_board, square_number)):
             # update board
             game_board = make_move(game_board, square_number, current_player);
+            # print current game state
+            show_board(game_board);
             # check for winner or draw
             if(check_winner(game_board, current_player)):
+                print();
                 print('Player ' + current_player + ' has won the game!');
             elif(check_draw(game_board)):
+                print();
                 print('Game has ended in a draw!');
             else:
                 # swap player
                 current_player = switch_current_player(current_player);
                 # call game again
-                handle_game(game_board, int(square_number), current_player);
+                handle_game(game_board, int(input('Player ' + current_player + ' please enter a square number: ')), current_player);
         else:
+            print();
             print('That square has already been used.');
-            number = input('Please pick another number: ');
-            handle_game(game_board, int(number), current_player);
+            handle_game(game_board, int(input('Please pick another number: ')), current_player);
     else:
+        print();
         print('That square number is not within range. Must be between 1 and 9');
-        number = input('Please pick another number: ');
-        handle_game(game_board, int(number), current_player);
+        handle_game(game_board, int(input('Please pick another number: ')), current_player);
 
 
 def reset_game():
