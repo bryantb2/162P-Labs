@@ -30,7 +30,7 @@ def is_square_open(board, square_number):
     indexes = translate_move_to_indexes(square_number);
     row_index = indexes["row"];
     column_index = indexes["column"];
-    square_value = board[row_index][column_index];
+    square_value = board[column_index][row_index];
     # check value in square
     if(square_value == player_one_marker or square_value == player_two_marker):
         return False;
@@ -74,7 +74,7 @@ def check_draw(board):
     for column in range(3):
         for row in range(3):
             square_number = translate_indexes_to_number(column, row);
-            if(is_square_open(board, square_number)):
+            if(is_square_open(board, square_number) == False):
                 square_counter += 1;
     if(square_counter == 9):
         return True;
@@ -147,6 +147,7 @@ def handle_game(game_board, square_number, current_player):
                     # swap player
                     current_player = switch_current_player(current_player);
                     # call game again
+                    print();
                     handle_game(game_board, input('Player ' + current_player + ' please enter a square number: '), current_player);
             else:
                 print();
