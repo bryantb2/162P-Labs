@@ -126,35 +126,39 @@ def check_diagonals(board, player_marker):
 
 # handlers
 def handle_game(game_board, square_number, current_player):
-    # validate inputted number
-    if(move_in_range(square_number)):
-        # check if square is available
-        if(is_square_open(game_board, square_number)):
-            # update board
-            game_board = make_move(game_board, square_number, current_player);
-            # print current game state
-            show_board(game_board);
-            # check for winner or draw
-            if(check_winner(game_board, current_player)):
-                print();
-                print('Player ' + current_player + ' has won the game!');
-            elif(check_draw(game_board)):
-                print();
-                print('Game has ended in a draw!');
+    try:
+        square_number = int(square_number);
+        # validate inputted number
+        if(move_in_range(square_number)):
+            # check if square is available
+            if(is_square_open(game_board, square_number)):
+                # update board
+                game_board = make_move(game_board, square_number, current_player);
+                # print current game state
+                show_board(game_board);
+                # check for winner or draw
+                if(check_winner(game_board, current_player)):
+                    print();
+                    print('Player ' + current_player + ' has won the game!');
+                elif(check_draw(game_board)):
+                    print();
+                    print('Game has ended in a draw!');
+                else:
+                    # swap player
+                    current_player = switch_current_player(current_player);
+                    # call game again
+                    handle_game(game_board, input('Player ' + current_player + ' please enter a square number: '), current_player);
             else:
-                # swap player
-                current_player = switch_current_player(current_player);
-                # call game again
-                handle_game(game_board, int(input('Player ' + current_player + ' please enter a square number: ')), current_player);
+                print();
+                print('That square has already been used.');
+                handle_game(game_board, input('Please pick another number: '), current_player);
         else:
             print();
-            print('That square has already been used.');
-            handle_game(game_board, int(input('Please pick another number: ')), current_player);
-    else:
-        print();
-        print('That square number is not within range. Must be between 1 and 9');
-        handle_game(game_board, int(input('Please pick another number: ')), current_player);
-
+            print('That square number is not within range. Must be between 1 and 9');
+            handle_game(game_board, input('Please pick another number: '), current_player);
+    except ValueError:
+        print('Please enter a valid single digit number');
+        handle_game(game_board, input('Please pick another number: '), current_player);
 
 def reset_game():
     # set starting values
@@ -165,7 +169,7 @@ def reset_game():
     print('The board looks like:');
     show_board(game_board);
     # start game
-    handle_game(game_board, int(input('Player ' + current_turn + ' please enter a square number: ')), current_turn);
+    handle_game(game_board, input('Player ' + current_turn + ' please enter a square number: '), current_turn);
 
 # Run Test
 reset_game();
