@@ -27,6 +27,7 @@ def move_in_range(user_move_number):
     return False;
 
 def is_square_open(board, square_number):
+    # convert square number to array indexes
     indexes = translate_move_to_indexes(square_number);
     row_index = indexes["row"];
     column_index = indexes["column"];
@@ -56,9 +57,11 @@ def translate_indexes_to_number(column, row):
     return 3 * row + (column + 1)
 
 def make_move(board, square_number, player_marker):
+    # convert square number to array indexes
     indexes = translate_move_to_indexes(square_number);
     row = indexes["row"];
     column = indexes["column"];
+    # mark board
     board[column][row] = player_marker;
     return board;
 
@@ -81,6 +84,7 @@ def check_draw(board):
     return False;
 
 def check_winner(board, player_marker):
+    # check if there are any vertical, diagonal, and horizontal matches for given player marker
     if(check_vertical(board, player_marker) 
        or check_horizontal(board, player_marker) 
        or check_diagonals(board, player_marker)):
@@ -89,6 +93,7 @@ def check_winner(board, player_marker):
 
 
 def check_vertical(board, player_marker):
+    # search columns
     for column in range(3):
         square_counter = 0;
         for row in range(3):
@@ -99,6 +104,7 @@ def check_vertical(board, player_marker):
     return False;
 
 def check_horizontal(board, player_marker):
+    # search rows
     for row in range(3):
         square_counter = 0;
         for column in range(3):
