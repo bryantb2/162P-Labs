@@ -179,15 +179,4 @@ def reset_game():
     handle_game(game_board, input('Player ' + current_turn + ' please enter a square number: '), current_turn);
 
 # Run Test
-#reset_game();
-
-
-
-def test_func():
-    a = [1,3,5];
-    print(3 * a);
-
-    b = [2,4,6];
-    print(a + b);
-
-test_func();
+reset_game();
