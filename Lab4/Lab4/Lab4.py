@@ -260,7 +260,7 @@ def add_player_and_treasure(trap_fill_dungeon):
     # return board
     return trap_fill_dungeon;
 
-def reset_game():
+def main():
     # generate dungeon
     # fill dungeon with entities
     # print instructions
@@ -282,5 +282,6 @@ def reset_game():
     handle_move(board_with_players_treasure, prompt_move('Please make your first move. Use L, R, U, or D to traverse the board: '));
 
 
-# testing functions
-reset_game();
+# Call reset game if script is being executed and not imported
+if(__name__ == "__main__"):
+    main();
