@@ -7,3 +7,4 @@ trap_symbol = 'T';
 treasure_symbol = 'X';
 player_symbol = 'G';
 empty_square_symbol = '*';
+move_dic_structure = { "row": 0, "col": 0 };
