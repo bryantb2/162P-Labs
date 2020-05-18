@@ -65,7 +65,7 @@ def main():
     
 
     print("\nTesting find ")
-    print("Blue 2018 Chevy should not be there and ", end = "")
+    print("Blue 2018 Chevy should not be thxere and ", end = "")
     if theList.findCar("Chevy", "Blue", 2018):
         print("it is")
     else:
