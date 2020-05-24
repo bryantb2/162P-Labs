@@ -42,6 +42,7 @@ def print_instructions():
     print("the player, marked as " + constant.player_symbol + ", " + "traverse the board towards the treasure, marked as " + constant.treasure_symbol + ". \n");
     print("To win, you must safety move left, right, up, or down to the treasure, without touching the traps. \n")
     print("Note that the empty squares, marked as " + constant.empty_square_symbol + " are safe to come in contact with, and should be the only squares you touch. \n");
+    print("Use L, R, U, or D to traverse the board.");
     print("Remeber: you can end the game at any time by typing 'quit'.")
     print("------------- Begin Game ------------- \n");
 
@@ -235,7 +236,7 @@ def validate_user_board_value_inbounds(user_input, lower_bound, upper_bound):
 
 
 # Handlers
-def handle_play_again():
+def prompt_restart():
     # this will restart the game if user answers yes
     should_restart = False;
     has_answered = False;
@@ -247,68 +248,16 @@ def handle_play_again():
         else:
             print('Please enter a valid value.');
     if(should_restart):
-        handle_board_setup();
+        return True;
+    else:
+        return False;
 
 def handle_board_setup():
     # check if user wants to set custom board size
-    # generate dungeona
-    # print instructions
-    # print board
-    # start game
+    # generate dungeon
     prompt_and_set_user_size();
     dungeon = generate_dungeon();
-    print_dungeon_board(dungeon);
-    handle_move(dungeon, prompt_user('Please make your first move. Use L, R, U, or D to traverse the board: '));
-
-def handle_move(dungeon, move_type):
-    # check if user wants to quit
-    if(validate_quit(move_type) == False):
-        # get current player pos
-        current_pos = get_player_position(dungeon);
-        # validate input
-        if(is_valid_move_type(move_type)):
-            # translate move to indexes
-            # check if within bounds
-            move_indexes = translate_move_to_indexes(dungeon, current_pos, move_type);
-            if(move_out_of_bounds(move_indexes) == False):
-                # check for win loss conditions
-                if(check_if_collides(dungeon, move_indexes, constant.trap_symbol)):
-                    # show board
-                    # prompt to play again
-                    new_dungeon = make_player_move(dungeon, current_pos, move_indexes);
-                    print_dungeon_board(new_dungeon);
-                    print('You moved onto a trap! Game over.');
-                    handle_play_again();
-                elif(check_if_collides(dungeon, move_indexes, constant.treasure_symbol)):
-                    # show board
-                    # prompt to play again
-                    new_dungeon = make_player_move(dungeon, current_pos, move_indexes);
-                    print_dungeon_board(new_dungeon);
-                    print('You got to the treasure. Congrats, you have won!');
-                    handle_play_again();
-                else:
-                    # make move
-                    # print move
-                    # show board
-                    new_dungeon = make_player_move(dungeon, current_pos, move_indexes);
-                    print_move(move_type);
-                    print_dungeon_board(new_dungeon);
-                    # Call handle game and pass in new move value
-                    handle_move(new_dungeon, prompt_user('Please enter a valid move character: '));
-            else: 
-                # Print errors and prompt for new move value
-                print_inbound_moves_UI_string( return_inbound_moves(dungeon, current_pos) );
-                move_input = prompt_user('Please enter move character within game bounds: ');
-                # Call handle game and pass in new move value
-                handle_move(dungeon, move_input);
-        else:
-            # Print errors and prompt for new move value
-            print_available_move_types();
-            move_input = prompt_user('Please enter a valid move character: ');
-            # Call handle game and pass in new move value
-            handle_move(dungeon, move_input);
-    else:
-        handle_play_again();
+    return dungeon;
 
 
 # Board generators
@@ -386,7 +335,80 @@ def add_player_and_treasure(trap_fill_dungeon):
 
 # Call main if script is being executed and not imported
 def main():
-    handle_board_setup();
+    # setup board data
+    # print board and instructions
+    game_board = handle_board_setup();
+    print_dungeon_board(game_board);
+    print_instructions();
+    move_within_bounds = True;
+    move_type_valid = True;
+    game_over = False;
+    terminate_game_loop = False;
+    # initialize game loop
+    while(terminate_game_loop == False):
+        # prompt for input
+        move_type = None;
+        if (game_over):
+            reset = prompt_restart();
+            terminate_game_loop = True if reset == False else False;
+        elif (move_within_bounds == False):
+            move_type = prompt_user('Please enter move character within game bounds: ');
+        elif (move_type_valid == False):
+            move_type = prompt_user('Please enter a valid move character: ');
+        else:
+            move_type = prompt_user('Please make your move: ');
+        # handle input
+        if(game_over == False):
+            # check if user wants to quit
+            if(validate_quit(move_type) == False):
+                # get current player pos
+                current_pos = get_player_position(game_board);
+                # validate input
+                if(is_valid_move_type(move_type)):
+                    # translate move to indexes
+                    # check if within bounds
+                    move_indexes = translate_move_to_indexes(game_board, current_pos, move_type);
+                    if(move_out_of_bounds(move_indexes) == False):
+                        # check for win loss conditions
+                        if(check_if_collides(game_board, move_indexes, constant.trap_symbol)):
+                            # show board
+                            game_board = make_player_move(game_board, current_pos, move_indexes);
+                            print_dungeon_board(game_board);
+                            print('You moved onto a trap! Game over.');
+                            game_over = True;
+                        elif(check_if_collides(game_board, move_indexes, constant.treasure_symbol)):
+                            # show board
+                            game_board = make_player_move(game_board, current_pos, move_indexes);
+                            print_dungeon_board(game_board);
+                            print('You got to the treasure. Congrats, you have won!');
+                            game_over = True;
+                        else:
+                            # make move
+                            # print move
+                            # show board
+                            game_board = make_player_move(game_board, current_pos, move_indexes);
+                            print_move(move_type);
+                            print_dungeon_board(game_board);
+                    else: 
+                        # Print errors
+                        print_inbound_moves_UI_string( return_inbound_moves(game_board, current_pos) );
+                        move_within_bounds = False;
+                else:
+                    # Print errors and prompt for new move value
+                    print_available_move_types();
+                    move_type_valid = False;
+            else:
+                # break game loop
+                terminate_game_loop = True;
+        else:
+            if (terminate_game_loop == False):
+                # this will fire when the user has chosen to reset the game
+                game_board = handle_board_setup();
+                print_dungeon_board(game_board);
+                game_over = False;
+                should_restart = False;
+                move_within_bounds = True;
+                move_type_valid = True;
 
 if(__name__ == "__main__"):
     main();
